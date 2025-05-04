@@ -25,29 +25,28 @@ class DataReader:
         except Exception as e:
             raise ValueError(f"Error reading file: {e}") 
 
-    def get_data(self, source):
+    def get_data(self, *args):
         """
         Fetch stock price data from a file or a tuple (ticker, start_date, end_date).
 
         Args:
-            source (str or tuple): If str, it is treated as a file path.
-                                   If tuple, it should be (ticker, start_date, end_date).
+            source (str or tuple): If single entry, the file path to read data from.
+                If three entries, the entries should be in order ticker, start_date, end_date.
 
         Returns:
             pd.DataFrame: Stock price data as a DataFrame.
         """
-        if isinstance(source, str):
-            # Fetch data from a file
-            return self._read_data_source(source)
-        
+        print(args)
 
-        elif isinstance(source, tuple) and len(source) == 3:
-            # Fetch data from yfinance
-            ticker, start_date, end_date = source
+        if len(args) == 1: return self._read_data_source(args[0])
+        
+        
+        elif len(args) == 3:
+            ticker, start_date, end_date = args
             try:
                 data = yf.download(ticker, start=start_date, end=end_date, interval=self._interval)
                 return data
             except Exception as e:
                 raise ValueError(f"Error fetching data from yfinance: {e}")
         else:
-            raise ValueError("Invalid source. Provide a file path or a tuple (ticker, start_date, end_date).")
+            raise ValueError("Invalid source. Provide a file path or ticker, start_date, end_date.")
