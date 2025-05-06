@@ -36,10 +36,7 @@ class DataReader:
         Returns:
             pd.DataFrame: Stock price data as a DataFrame.
         """
-        print(args)
-
         if len(args) == 1: return self._read_data_source(args[0])
-        
         
         elif len(args) == 3:
             ticker, start_date, end_date = args
