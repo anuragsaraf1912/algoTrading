@@ -24,6 +24,25 @@ class DataReader:
             return data
         except Exception as e:
             raise ValueError(f"Error reading file: {e}") 
+    
+    def _read_data_yahoo(self, args):
+        """
+        Fetch stock price data from Yahoo Finance.
+
+        Args:
+            ticker (str): The stock ticker symbol.
+            start_date (str): The start date for fetching data (YYYY-MM-DD).
+            end_date (str): The end date for fetching data (YYYY-MM-DD).
+
+        Returns:
+            pd.DataFrame: Stock price data as a DataFrame.
+        """
+        try:
+            ticker, start_date, end_date = args
+            data = yf.download(ticker, start=start_date, end=end_date, interval=self._interval)
+            return data
+        except Exception as e:
+            raise ValueError(f"Error fetching data from yfinance: {e}")
 
     def get_data(self, *args):
         """
@@ -39,11 +58,6 @@ class DataReader:
         if len(args) == 1: return self._read_data_source(args[0])
         
         elif len(args) == 3:
-            ticker, start_date, end_date = args
-            try:
-                data = yf.download(ticker, start=start_date, end=end_date, interval=self._interval)
-                return data
-            except Exception as e:
-                raise ValueError(f"Error fetching data from yfinance: {e}")
+            return self._read_data_yahoo(args)
         else:
             raise ValueError("Invalid source. Provide a file path or ticker, start_date, end_date.")
