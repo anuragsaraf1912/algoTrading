@@ -17,8 +17,6 @@ class DataReader:
 
 
     def _read_data_file(self, file_path):
-        
-        # Read data from a file
         try:
             data = pd.read_csv(file_path)
             return data
